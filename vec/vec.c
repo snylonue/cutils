@@ -1,0 +1,60 @@
+#include "vec.h"
+
+#include <assert.h>
+#include <string.h>
+
+struct vec *vec_create(size_t elem_size) {
+  struct vec *v = malloc(sizeof(struct vec));
+  v->data = NULL;
+  v->cap = 0;
+  v->len = 0;
+  v->elem_size = elem_size;
+  return v;
+}
+
+struct vec *vec_from_array(void *arr, size_t len, size_t elem_size) {
+  struct vec *v = vec_create(elem_size);
+  v->data = arr;
+  v->len = len;
+  v->cap = len;
+  return v;
+}
+
+void vec_push(struct vec *v, void *value) {
+  assert(v && value);
+  if (v->cap <= v->len) {
+    vec_realloc(v);
+  }
+
+  memcpy(v->data + v->len * v->elem_size, value, v->elem_size);
+  v->len += 1;
+}
+
+void *vec_get(struct vec *v, size_t at) {
+  if ((!v) || at >= v->len || (!v->data)) {
+    return NULL;
+  }
+
+  return v->data + (at * v->elem_size);
+}
+
+void *vec_pop(struct vec *v) {
+  if ((!v) || (!v->len)) {
+    return NULL;
+  }
+
+  void *last = malloc(v->elem_size);
+  memcpy(last, vec_get(v, v->len - 1), v->elem_size);
+  v->len -= 1;
+  return last;
+}
+
+void vec_set(struct vec *v, void *value, size_t at) {
+  if ((!v) || at >= v->len || (!v->data)) {
+    return;
+  }
+
+  memcpy(vec_get(v, at), value, v->elem_size);
+}
+
+void vec_free(struct vec *v) { free(v->data); }
