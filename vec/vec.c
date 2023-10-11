@@ -21,7 +21,6 @@ struct vec *vec_from_array(void *arr, size_t len, size_t elem_size) {
 }
 
 void vec_push(struct vec *v, void *value) {
-  assert(v && value);
   if (v->cap <= v->len) {
     vec_realloc(v);
   }
