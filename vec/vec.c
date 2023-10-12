@@ -49,6 +49,15 @@ void *vec_get(struct vec *v, size_t at) {
   return v->data + (at * v->elem_size);
 }
 
+struct slice vec_slice(struct vec *v, size_t from, size_t to) {
+  struct slice s = { .data = v->data + from * v->elem_size, .len = to - from, .elem_size = v->elem_size };
+  return s;
+}
+
+struct slice vec_slice_all(struct vec *v) {
+  return vec_slice(v, 0, v->len);
+}
+
 void *vec_pop(struct vec *v) {
   if ((!v) || (!v->len)) {
     return NULL;
@@ -69,3 +78,7 @@ void vec_set(struct vec *v, void *value, size_t at) {
 }
 
 void vec_free(struct vec *v) { free(v->data); }
+
+void *slice_get(struct slice *s, size_t at) {
+  return s->data + (at * s->elem_size);
+}
