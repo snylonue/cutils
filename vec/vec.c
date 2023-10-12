@@ -1,6 +1,7 @@
 #include "vec.h"
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct vec *vec_create(size_t elem_size) {
@@ -18,6 +19,16 @@ struct vec *vec_from_array(void *arr, size_t len, size_t elem_size) {
   v->len = len;
   v->cap = len;
   return v;
+}
+
+void vec_realloc(struct vec *v) {
+  if (v->cap == 0) {
+    v->data = malloc(v->elem_size);
+    v->cap = 1;
+  } else {
+    v->cap *= 2;
+    v->data = realloc(v->data, v->cap * v->elem_size);
+  }
 }
 
 void vec_push(struct vec *v, void *value) {
