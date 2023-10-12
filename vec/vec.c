@@ -15,7 +15,8 @@ struct vec *vec_create(size_t elem_size) {
 
 struct vec *vec_from_array(void *arr, size_t len, size_t elem_size) {
   struct vec *v = vec_create(elem_size);
-  v->data = arr;
+  v->data = malloc(len * elem_size);
+  memcpy(v->data, arr, len * elem_size);
   v->len = len;
   v->cap = len;
   return v;
