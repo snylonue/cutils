@@ -65,6 +65,15 @@ void vec_set(struct vec *v, void *value, size_t at) {
   memcpy(vec_get(v, at), value, v->elem_size);
 }
 
+void vec_remove(struct vec *v, size_t at) {
+  if (at + 1 == v->len) {
+    v->len -= 1;
+  } else {
+    memmove(vec_get(v, at), vec_get(v, at + 1), (v->len - at - 1) * v->elem_size);
+    v->len -= 1;
+  }
+}
+
 void vec_free(struct vec *v) { free(v->data); }
 
 void *slice_get(struct slice *s, size_t at) {

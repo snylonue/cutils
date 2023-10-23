@@ -34,6 +34,8 @@ void *vec_pop(struct vec *v);
 
 void vec_set(struct vec *v, void *value, size_t at);
 
+void vec_remove(struct vec *v, size_t at);
+
 void vec_free(struct vec *v);
 
 void *slice_get(struct slice *s, size_t at);
