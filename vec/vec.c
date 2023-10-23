@@ -69,4 +69,10 @@ void vec_remove(struct vec *v, size_t at) {
   }
 }
 
+struct iter vec_iter(struct vec *v) {
+  return (struct iter){.ptr = v->data,
+                       .end = v->data + v->len * v->elem_size,
+                       .elem_size = v->elem_size};
+}
+
 void vec_free(struct vec *v) { free(v->data); }

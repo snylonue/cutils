@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "iter.h"
 #include "slice.h"
 
 // SAFETY: All fields should not be modified directly.
@@ -33,6 +34,8 @@ void vec_set(struct vec *v, void *value, size_t at);
 
 // SAFETY: v should be valid and 0 <= at < v->len
 void vec_remove(struct vec *v, size_t at);
+
+struct iter vec_iter(struct vec *v);
 
 void vec_free(struct vec *v);
 
