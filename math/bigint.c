@@ -53,8 +53,8 @@ void biguint_add_assign(struct biguint *self, struct biguint *rhs) {
   if (self_len >= rhs_len) {
     carry = add_nums(vec_slice_all(&self->nums), vec_slice_all(&rhs->nums));
   } else {
-    carry =
-        add_nums(vec_slice_all(&self->nums), vec_slice(&rhs->nums, 0, self_len));
+    carry = add_nums(vec_slice_all(&self->nums),
+                     vec_slice(&rhs->nums, 0, self_len));
     for (size_t i = self_len; i < rhs_len; ++i) {
       vec_push(&self->nums, vec_get(&rhs->nums, i));
     }
@@ -83,24 +83,24 @@ bool biguint_eq(struct biguint *self, struct biguint *rhs) {
 }
 
 void swap(char *a, char *b) {
-    char tmp = *a;
-    *a = *b;
-    *b = tmp;
+  char tmp = *a;
+  *a = *b;
+  *b = tmp;
 }
 
 void str_reverse(char *s, const size_t len) {
-    if (len == 0) {
-        return;
-    }
-    for (size_t i = 0, j = len - 1; i < j; ++i, --j) {
-        swap(s + i, s + j);
-    }
+  if (len == 0) {
+    return;
+  }
+  for (size_t i = 0, j = len - 1; i < j; ++i, --j) {
+    swap(s + i, s + j);
+  }
 }
 
 char *biguint_to_string(struct biguint *self) {
   struct vec str = vec_create(sizeof(char));
-  for (size_t i = 0; i < self->nums.len; ++i) {\
-    char ch = *(char*)vec_get(&self->nums, i) + '0';
+  for (size_t i = 0; i < self->nums.len; ++i) {
+    char ch = *(char *)vec_get(&self->nums, i) + '0';
     vec_push(&str, &ch);
   }
   str_reverse(str.data, str.len);
