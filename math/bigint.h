@@ -24,6 +24,8 @@ void biguint_add_assign(struct biguint *self, struct biguint *rhs);
 
 bool biguint_eq(struct biguint *self, struct biguint *rhs);
 
+char *biguint_to_string(struct biguint *self);
+
 void biguint_free(struct biguint *n);
 
 #endif
