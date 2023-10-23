@@ -55,9 +55,7 @@ void biguint_add_assign(struct biguint *self, struct biguint *rhs) {
   } else {
     carry = add_nums(vec_slice_all(&self->nums),
                      vec_slice(&rhs->nums, 0, self_len));
-    for (size_t i = self_len; i < rhs_len; ++i) {
-      vec_push(&self->nums, vec_get(&rhs->nums, i));
-    }
+    vec_extend(&self->nums, vec_get(&rhs->nums, self_len), rhs_len - self_len);
     struct biguint left = biguint_from(carry);
     carry = add_nums(vec_slice(&self->nums, self_len, self->nums.len),
                      vec_slice_all(&left.nums));
@@ -103,8 +101,7 @@ char *biguint_to_string(struct biguint *self) {
     vec_push(&str, &ch);
   }
   str_reverse(str.data, str.len);
-  const char terminate = '\0';
-  vec_push(&str, &terminate);
+  vec_push(&str, "\0");
   char *s = str.data;
   return s;
 }
