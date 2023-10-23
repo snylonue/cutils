@@ -20,9 +20,9 @@ struct slice {
 struct vec *vec_create(size_t elem_size);
 
 // struct vec *vec_alloc(size_t elem_size);
-struct vec *vec_from_array(void *arr, size_t len, size_t elem_size);
+struct vec *vec_from_array(const void *arr, size_t len, size_t elem_size);
 
-void vec_push(struct vec *v, void *value);
+void vec_push(struct vec *v, const void *value);
 
 void *vec_get(struct vec *v, size_t at);
 

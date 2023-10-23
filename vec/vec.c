@@ -13,7 +13,7 @@ struct vec *vec_create(size_t elem_size) {
   return v;
 }
 
-struct vec *vec_from_array(void *arr, size_t len, size_t elem_size) {
+struct vec *vec_from_array(const void *arr, size_t len, size_t elem_size) {
   struct vec *v = vec_create(elem_size);
   v->data = malloc(len * elem_size);
   memcpy(v->data, arr, len * elem_size);
@@ -32,7 +32,7 @@ void vec_realloc(struct vec *v) {
   }
 }
 
-void vec_push(struct vec *v, void *value) {
+void vec_push(struct vec *v, const void *value) {
   if (v->cap <= v->len) {
     vec_realloc(v);
   }
@@ -42,10 +42,6 @@ void vec_push(struct vec *v, void *value) {
 }
 
 void *vec_get(struct vec *v, size_t at) {
-  if ((!v) || at >= v->len || (!v->data)) {
-    return NULL;
-  }
-
   return v->data + (at * v->elem_size);
 }
 
@@ -59,10 +55,6 @@ struct slice vec_slice(struct vec *v, size_t from, size_t to) {
 struct slice vec_slice_all(struct vec *v) { return vec_slice(v, 0, v->len); }
 
 void *vec_pop(struct vec *v) {
-  if ((!v) || (!v->len)) {
-    return NULL;
-  }
-
   void *last = malloc(v->elem_size);
   memcpy(last, vec_get(v, v->len - 1), v->elem_size);
   v->len -= 1;
@@ -70,10 +62,6 @@ void *vec_pop(struct vec *v) {
 }
 
 void vec_set(struct vec *v, void *value, size_t at) {
-  if ((!v) || at >= v->len || (!v->data)) {
-    return;
-  }
-
   memcpy(vec_get(v, at), value, v->elem_size);
 }
 
