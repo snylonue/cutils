@@ -19,12 +19,11 @@ struct vec vec_from_array(const void *arr, size_t len, size_t elem_size) {
 
 void vec_realloc(struct vec *v) {
   if (v->cap == 0) {
-    v->data = malloc(v->elem_size);
     v->cap = 1;
   } else {
-    v->cap *= 2;
-    v->data = realloc(v->data, v->cap * v->elem_size);
+    v->cap <<= 1;
   }
+  v->data = realloc(v->data, v->cap * v->elem_size);
 }
 
 void vec_push(struct vec *v, const void *value) {
