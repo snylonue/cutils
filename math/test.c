@@ -14,8 +14,7 @@ struct biguint new(uint32_t *a, size_t s) {
 }
 
 void test(struct biguint a, struct biguint b, struct biguint expected) {
-  scanf("%s", &a);
-  printf("%s\n", biguint_to_string(&expected), 1, 2);
+  printf("%s\n", biguint_to_string(&expected));
   biguint_add_assign(&a, &b);
   assert(biguint_eq(&a, &expected));
 }
