@@ -4,17 +4,13 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "slice.h"
+
 // SAFETY: All fields should not be modified directly.
 struct vec {
   void *data;
   size_t len;
   size_t cap;
-  size_t elem_size;
-};
-
-struct slice {
-  void *data;
-  size_t len;
   size_t elem_size;
 };
 
@@ -39,7 +35,5 @@ void vec_set(struct vec *v, void *value, size_t at);
 void vec_remove(struct vec *v, size_t at);
 
 void vec_free(struct vec *v);
-
-void *slice_get(struct slice *s, size_t at);
 
 #endif // VEC_LIBRARY_H

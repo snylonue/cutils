@@ -70,7 +70,3 @@ void vec_remove(struct vec *v, size_t at) {
 }
 
 void vec_free(struct vec *v) { free(v->data); }
-
-void *slice_get(struct slice *s, size_t at) {
-  return s->data + (at * s->elem_size);
-}
