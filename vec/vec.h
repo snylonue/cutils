@@ -22,6 +22,10 @@ struct vec vec_from_array(const void *arr, size_t len, size_t elem_size);
 
 void vec_push(struct vec *v, const void *value);
 
+void vec_extend(struct vec *v, const void *arr, size_t len);
+
+void vec_extend_from(struct vec *v, struct vec other);
+
 void *vec_get(struct vec *v, size_t at);
 
 struct slice vec_slice(struct vec *v, size_t from, size_t to);

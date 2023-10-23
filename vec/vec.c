@@ -1,6 +1,7 @@
 #include "vec.h"
 
 #include <assert.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,6 +34,20 @@ void vec_push(struct vec *v, const void *value) {
 
   memcpy(v->data + v->len * v->elem_size, value, v->elem_size);
   v->len += 1;
+}
+
+void vec_extend(struct vec *v, const void *arr, size_t len) {
+  if (v->cap < v->len + len) {
+    v->cap = v->len + len;
+    v->data = realloc(v->data, v->cap * v->elem_size);
+  }
+
+  memcpy(v->data + v->len * v->elem_size, arr, len * v->elem_size);
+  v->len += len;
+}
+
+void vec_extend_from(struct vec *v, struct vec other) {
+  vec_extend(v, other.data, other.len);
 }
 
 void *vec_get(struct vec *v, size_t at) {
