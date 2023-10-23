@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+// SAFETY: All fields should not be modified directly.
 struct vec {
   void *data;
   size_t len;
@@ -34,6 +35,7 @@ void *vec_pop(struct vec *v);
 
 void vec_set(struct vec *v, void *value, size_t at);
 
+// SAFETY: v should be valid and 0 <= at < v->len
 void vec_remove(struct vec *v, size_t at);
 
 void vec_free(struct vec *v);
