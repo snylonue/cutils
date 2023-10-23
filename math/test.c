@@ -9,7 +9,7 @@ const uint32_t N1 = -1;
 const uint32_t N2 = -2;
 
 struct biguint new(uint32_t *a, size_t s) {
-  struct vec *v = vec_from_array(a, s, sizeof(uint32_t));
+  struct vec v = vec_from_array(a, s, sizeof(uint32_t));
   return biguint_create(v);
 }
 

@@ -6,13 +6,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-struct biguint biguint_create(struct vec *nums) {
+struct biguint biguint_create(struct vec nums) {
   struct biguint n = {.nums = nums};
   return n;
 }
 
 struct biguint biguint_from(uint32_t n) {
-  struct vec *nums = vec_from_array(&n, 1, sizeof(uint32_t));
+  struct vec nums = vec_from_array(&n, 1, sizeof(uint32_t));
   return biguint_create(nums);
 }
 
@@ -47,34 +47,34 @@ uint32_t add_nums(struct slice lhs, struct slice rhs) {
 }
 
 void biguint_add_assign(struct biguint *self, struct biguint *rhs) {
-  size_t self_len = self->nums->len;
-  size_t rhs_len = rhs->nums->len;
+  size_t self_len = self->nums.len;
+  size_t rhs_len = rhs->nums.len;
   uint32_t carry;
   if (self_len >= rhs_len) {
-    carry = add_nums(vec_slice_all(self->nums), vec_slice_all(rhs->nums));
+    carry = add_nums(vec_slice_all(&self->nums), vec_slice_all(&rhs->nums));
   } else {
     carry =
-        add_nums(vec_slice_all(self->nums), vec_slice(rhs->nums, 0, self_len));
+        add_nums(vec_slice_all(&self->nums), vec_slice(&rhs->nums, 0, self_len));
     for (size_t i = self_len; i < rhs_len; ++i) {
-      vec_push(self->nums, vec_get(rhs->nums, i));
+      vec_push(&self->nums, vec_get(&rhs->nums, i));
     }
     struct biguint left = biguint_from(carry);
-    carry = add_nums(vec_slice(self->nums, self_len, self->nums->len),
-                     vec_slice_all(left.nums));
+    carry = add_nums(vec_slice(&self->nums, self_len, self->nums.len),
+                     vec_slice_all(&left.nums));
     biguint_free(&left);
   }
   if (carry != 0) {
-    vec_push(self->nums, &carry);
+    vec_push(&self->nums, &carry);
   }
 }
 
 bool biguint_eq(struct biguint *self, struct biguint *rhs) {
-  if (self->nums->len != rhs->nums->len) {
+  if (self->nums.len != rhs->nums.len) {
     return false;
   } else {
-    for (size_t i = 0; i < self->nums->len; ++i) {
-      if (*(uint32_t *)vec_get(self->nums, i) !=
-          *(uint32_t *)vec_get(rhs->nums, i)) {
+    for (size_t i = 0; i < self->nums.len; ++i) {
+      if (*(uint32_t *)vec_get(&self->nums, i) !=
+          *(uint32_t *)vec_get(&rhs->nums, i)) {
         return false;
       }
     }
@@ -98,17 +98,16 @@ void str_reverse(char *s, const size_t len) {
 }
 
 char *biguint_to_string(struct biguint *self) {
-  struct vec *str = vec_create(sizeof(char));
-  for (size_t i = 0; i < self->nums->len; ++i) {\
-    char ch = *(char*)vec_get(self->nums, i) + '0';
-    vec_push(str, &ch);
+  struct vec str = vec_create(sizeof(char));
+  for (size_t i = 0; i < self->nums.len; ++i) {\
+    char ch = *(char*)vec_get(&self->nums, i) + '0';
+    vec_push(&str, &ch);
   }
-  str_reverse(str->data, str->len);
+  str_reverse(str.data, str.len);
   const char terminate = '\0';
-  vec_push(str, &terminate);
-  char *s = str->data;
-  free(str);
+  vec_push(&str, &terminate);
+  char *s = str.data;
   return s;
 }
 
-void biguint_free(struct biguint *n) { vec_free(n->nums); }
+void biguint_free(struct biguint *n) { vec_free(&n->nums); }

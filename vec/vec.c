@@ -4,21 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct vec *vec_create(size_t elem_size) {
-  struct vec *v = malloc(sizeof(struct vec));
-  v->data = NULL;
-  v->cap = 0;
-  v->len = 0;
-  v->elem_size = elem_size;
-  return v;
+struct vec vec_create(size_t elem_size) {
+  return (struct vec){.data = NULL, .cap = 0, .len = 0, .elem_size = elem_size};
 }
 
-struct vec *vec_from_array(const void *arr, size_t len, size_t elem_size) {
-  struct vec *v = vec_create(elem_size);
-  v->data = malloc(len * elem_size);
-  memcpy(v->data, arr, len * elem_size);
-  v->len = len;
-  v->cap = len;
+struct vec vec_from_array(const void *arr, size_t len, size_t elem_size) {
+  struct vec v = vec_create(elem_size);
+  v.data = malloc(len * elem_size);
+  memcpy(v.data, arr, len * elem_size);
+  v.len = len;
+  v.cap = len;
   return v;
 }
 
@@ -69,7 +64,8 @@ void vec_remove(struct vec *v, size_t at) {
   if (at + 1 == v->len) {
     v->len -= 1;
   } else {
-    memmove(vec_get(v, at), vec_get(v, at + 1), (v->len - at - 1) * v->elem_size);
+    memmove(vec_get(v, at), vec_get(v, at + 1),
+            (v->len - at - 1) * v->elem_size);
     v->len -= 1;
   }
 }

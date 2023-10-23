@@ -8,10 +8,10 @@
 
 // Inspired by https://docs.rs/num-bigint
 struct biguint {
-  struct vec *nums; // vec<uint32_t>
+  struct vec nums; // vec<uint32_t>
 };
 
-struct biguint biguint_create(struct vec *nums);
+struct biguint biguint_create(struct vec nums);
 
 struct biguint biguint_zero();
 
