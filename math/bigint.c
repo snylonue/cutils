@@ -71,12 +71,11 @@ void biguint_add_assign(struct biguint *self, struct biguint *rhs) {
 bool biguint_eq(struct biguint *self, struct biguint *rhs) {
   if (self->nums.len != rhs->nums.len) {
     return false;
-  } else {
-    for (size_t i = 0; i < self->nums.len; ++i) {
-      if (*(uint32_t *)vec_get(&self->nums, i) !=
-          *(uint32_t *)vec_get(&rhs->nums, i)) {
-        return false;
-      }
+  }
+  for (size_t i = 0; i < self->nums.len; ++i) {
+    if (*(uint32_t *)vec_get(&self->nums, i) !=
+        *(uint32_t *)vec_get(&rhs->nums, i)) {
+      return false;
     }
   }
   return true;

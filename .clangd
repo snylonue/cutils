@@ -1,0 +1,7 @@
+CompileFlags:
+  Add: ["-Wall", "-Wextra", "-xc", "--target=x86_64-w64-mingw32", "-D__USE_MINGW_ANSI_STDIO=0", "-std=c17"]
+
+Diagnostics:
+  ClangTidy:
+    Add: ["modernize*", "performance*", "portability*", "readability*"]
+    Remove: ["readability-identifier-length", "readability-magic-numbers", "readability-isolate-declaration"]
