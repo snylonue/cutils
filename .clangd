@@ -3,5 +3,5 @@ CompileFlags:
 
 Diagnostics:
   ClangTidy:
-    Add: ["modernize*", "performance*", "portability*", "readability*"]
-    Remove: ["readability-identifier-length", "readability-magic-numbers", "readability-isolate-declaration"]
+    Add: ["modernize*", "performance*", "portability*", "readability*", "bugprone*"]
+    Remove: ["readability-identifier-length", "readability-magic-numbers", "readability-isolate-declaration", "bugprone-easily-swappable-parameters"]

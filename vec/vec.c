@@ -24,7 +24,7 @@ void vec_realloc(struct vec *v) {
   } else {
     v->cap <<= 1;
   }
-  v->data = realloc(v->data, v->cap * v->elem_size);
+  v->data = realloc(v->data, v->cap * v->elem_size); // NOLINT: not deal with realloc failure now
 }
 
 void vec_push(struct vec *v, const void *value) {
@@ -39,7 +39,7 @@ void vec_push(struct vec *v, const void *value) {
 void vec_extend(struct vec *v, const void *arr, size_t len) {
   if (v->cap < v->len + len) {
     v->cap = v->len + len;
-    v->data = realloc(v->data, v->cap * v->elem_size);
+    v->data = realloc(v->data, v->cap * v->elem_size); // NOLINT: not deal with realloc failure now
   }
 
   memcpy(v->data + v->len * v->elem_size, arr, len * v->elem_size);

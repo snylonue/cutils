@@ -97,7 +97,7 @@ void str_reverse(char *s, const size_t len) {
 char *biguint_to_string(struct biguint *self) {
   struct vec str = vec_create(sizeof(char));
   for (size_t i = 0; i < self->nums.len; ++i) {
-    char ch = *(char *)vec_get(&self->nums, i) + '0';
+    char ch = *(uint32_t *)vec_get(&self->nums, i) + '0'; // NOLINT: all numbers in nums are in 0..=9
     vec_push(&str, &ch);
   }
   str_reverse(str.data, str.len);
