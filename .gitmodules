@@ -1,0 +1,3 @@
+[submodule "dependency/map-macro"]
+	path = dependency/map-macro
+	url = https://github.com/swansontec/map-macro.git
