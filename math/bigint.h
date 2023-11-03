@@ -17,14 +17,12 @@ struct biguint biguint_zero();
 
 struct biguint biguint_one();
 
-// struct biguint biguint_from(uint32_t n);
+struct biguint biguint_from(uint32_t n);
 
 // Computes `self + rhs` and stores result in `self`
 void biguint_add_assign(struct biguint *self, struct biguint *rhs);
 
 bool biguint_eq(struct biguint *self, struct biguint *rhs);
-
-char *biguint_to_string(struct biguint *self);
 
 void biguint_free(struct biguint *n);
 

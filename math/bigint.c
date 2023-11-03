@@ -21,9 +21,9 @@ struct biguint biguint_zero() { return biguint_from(0); }
 struct biguint biguint_one() { return biguint_from(1); }
 
 uint32_t add_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
-  uint32_t sum = *l + r + carry;
-  *l = sum % 10;
-  return sum / 10;
+  uint64_t sum = (uint64_t)*l + (uint64_t)r + (uint64_t)carry;
+  *l = (uint32_t)sum;
+  return sum >> 32;
 }
 
 // Caller must guarantee `lhs.len >= rhs.len`
@@ -77,33 +77,6 @@ bool biguint_eq(struct biguint *self, struct biguint *rhs) {
     }
   }
   return true;
-}
-
-void swap(char *a, char *b) {
-  char tmp = *a;
-  *a = *b;
-  *b = tmp;
-}
-
-void str_reverse(char *s, const size_t len) {
-  if (len == 0) {
-    return;
-  }
-  for (size_t i = 0, j = len - 1; i < j; ++i, --j) {
-    swap(s + i, s + j);
-  }
-}
-
-char *biguint_to_string(struct biguint *self) {
-  struct vec str = vec_create(sizeof(char));
-  for (size_t i = 0; i < self->nums.len; ++i) {
-    char ch = *(uint32_t *)vec_get(&self->nums, i) + '0'; // NOLINT: all numbers in nums are in 0..=9
-    vec_push(&str, &ch);
-  }
-  str_reverse(str.data, str.len);
-  vec_push(&str, "\0");
-  char *s = str.data;
-  return s;
 }
 
 void biguint_free(struct biguint *n) { vec_free(&n->nums); }
