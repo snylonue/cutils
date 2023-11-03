@@ -7,7 +7,7 @@
     float: fmt_float, \
     double: fmt_double, \
     char*: fmt_str \
-)(buf, val)
+)((buf), (val))
 
 #define __stdout_buf(val) def_fmt(stdout, val) 
 
