@@ -123,10 +123,11 @@ uint32_t mul_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
 // takes ownship of res
 struct biguint mul_num(const struct slice lhs, uint32_t num, struct vec res) {
   uint32_t carry = 0;
-  vec_extend_slice(&res, lhs);
-  for (size_t i = 0; i < res.len; ++i) {
-    carry = mul_with_carry(vec_get_mut(&res, i), num, carry);
-    vec_push(&res, &carry);
+  // vec_extend_slice(&res, lhs);
+  for (size_t i = 0; i < lhs.len; ++i) {
+    uint32_t val = *(uint32_t*)slice_get(&lhs, i);
+    carry = mul_with_carry(&val, num, carry);
+    vec_push(&res, &val);
   }
 
   if (carry) {
@@ -144,8 +145,9 @@ struct biguint biguint_mul(const struct biguint *self, const struct biguint *rhs
     for (size_t j = 0; j < i; ++j) {
       vec_push(&v, (int*){0});
     }
-    const struct biguint product = mul_num(vec_slice_all(&self->nums), *(uint32_t*)vec_get(&rhs->nums, i), v);
+    struct biguint product = mul_num(vec_slice_all(&self->nums), *(uint32_t*)vec_get(&rhs->nums, i), v);
     biguint_add_assign(&res, &product);
+    biguint_free(&product);
   }
 
   return res;
