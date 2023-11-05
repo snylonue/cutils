@@ -4,8 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-struct vec *primes(int n) {
-  struct vec *prime = vec_create(sizeof(int));
+struct vec primes(int n) {
+  struct vec prime = vec_create(sizeof(int));
 
   if (n <= 1) {
     return prime;
@@ -16,10 +16,10 @@ struct vec *primes(int n) {
 
   for (int i = 2; i <= n; ++i) {
     if (!vis[i - 1]) {
-      vec_push(prime, &i);
+      vec_push(&prime, &i);
     }
-    for (size_t j = 0; j < prime->len; j += 1) {
-      int p = *(int *)vec_get(prime, j);
+    for (size_t j = 0; j < prime.len; j += 1) {
+      int p = *(int *)vec_get(&prime, j);
       if (i > n / p) {
         break;
       }

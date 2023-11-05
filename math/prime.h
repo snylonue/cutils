@@ -4,6 +4,6 @@
 #include "../vec/vec.h"
 
 // Returns a vec<int> of primes in 1 to n.
-struct vec* primes(int n);
+struct vec primes(int n);
 
 #endif
