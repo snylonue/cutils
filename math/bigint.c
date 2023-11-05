@@ -114,6 +114,14 @@ void biguint_add_assign(struct biguint *self, const struct biguint *rhs) {
   }
 }
 
+struct biguint biguint_add(const struct biguint *self, const struct biguint *rhs) {
+  struct biguint cloned = biguint_zero();
+  vec_extend_from(&cloned.nums, self->nums);
+  
+  biguint_add_assign(&cloned, rhs);
+  return cloned;
+}
+
 uint32_t mul_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
   uint64_t mul = (uint64_t)(*l) * (uint64_t)r + (uint64_t)carry;
   *l = (uint32_t)mul;
