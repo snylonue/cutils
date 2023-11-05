@@ -20,17 +20,27 @@ struct vec vec_create(size_t elem_size);
 // struct vec *vec_alloc(size_t elem_size);
 struct vec vec_from_array(const void *arr, size_t len, size_t elem_size);
 
+struct vec vec_from_slice(struct slice s);
+
 void vec_push(struct vec *v, const void *value);
 
 void vec_extend(struct vec *v, const void *arr, size_t len);
 
 void vec_extend_from(struct vec *v, struct vec other);
 
-void *vec_get(struct vec *v, size_t at);
+void vec_extend_slice(struct vec *v, struct slice other);
 
-struct slice vec_slice(struct vec *v, size_t from, size_t to);
+const void *vec_get(const struct vec *v, size_t at);
 
-struct slice vec_slice_all(struct vec *v);
+void *vec_get_mut(struct vec *v, size_t at);
+
+struct slice vec_slice(const struct vec *v, size_t from, size_t to);
+
+struct slice_mut vec_slice_mut(struct vec *v, size_t from, size_t to);
+
+struct slice vec_slice_all(const struct vec *v);
+
+struct slice_mut vec_slice_mut_all(struct vec *v);
 
 void *vec_pop(struct vec *v);
 

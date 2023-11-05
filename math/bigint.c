@@ -28,16 +28,16 @@ uint32_t add_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
 
 // Caller must guarantee `lhs.len >= rhs.len`
 // Returns carry
-uint32_t add_nums(struct slice lhs, struct slice rhs) {
+uint32_t add_nums(struct slice_mut lhs, const struct slice rhs) {
   uint32_t carry = 0;
   for (size_t i = 0; i < rhs.len; ++i) {
-    uint32_t *l = slice_get(&lhs, i);
+    uint32_t *l = slice_get_mut(&lhs, i);
     const uint32_t r = *(uint32_t *)slice_get(&rhs, i);
     carry = add_with_carry(l, r, carry);
   }
 
   for (size_t i = rhs.len; i < lhs.len; ++i) {
-    carry = add_with_carry(slice_get(&lhs, i), 0, carry);
+    carry = add_with_carry(slice_get_mut(&lhs, i), 0, carry);
     if (carry == 0) {
       break;
     }
@@ -46,18 +46,18 @@ uint32_t add_nums(struct slice lhs, struct slice rhs) {
   return carry;
 }
 
-void biguint_add_assign(struct biguint *self, struct biguint *rhs) {
+void biguint_add_assign(struct biguint *self, const struct biguint *rhs) {
   size_t self_len = self->nums.len;
   size_t rhs_len = rhs->nums.len;
   uint32_t carry;
   if (self_len >= rhs_len) {
-    carry = add_nums(vec_slice_all(&self->nums), vec_slice_all(&rhs->nums));
+    carry = add_nums(vec_slice_mut_all(&self->nums), vec_slice_all(&rhs->nums));
   } else {
-    carry = add_nums(vec_slice_all(&self->nums),
+    carry = add_nums(vec_slice_mut_all(&self->nums),
                      vec_slice(&rhs->nums, 0, self_len));
     vec_extend(&self->nums, vec_get(&rhs->nums, self_len), rhs_len - self_len);
     struct biguint left = biguint_from(carry);
-    carry = add_nums(vec_slice(&self->nums, self_len, self->nums.len),
+    carry = add_nums(vec_slice_mut(&self->nums, self_len, self->nums.len),
                      vec_slice_all(&left.nums));
     biguint_free(&left);
   }
@@ -66,7 +66,44 @@ void biguint_add_assign(struct biguint *self, struct biguint *rhs) {
   }
 }
 
-bool biguint_eq(struct biguint *self, struct biguint *rhs) {
+uint32_t mul_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
+  uint64_t mul = (uint64_t)(*l) * (uint64_t)r + (uint64_t)carry;
+  *l = (uint32_t)mul;
+  return mul >> 32;
+}
+
+// takes ownship of res
+struct biguint mul_num(const struct slice lhs, uint32_t num, struct vec res) {
+  uint32_t carry = 0;
+  vec_extend_slice(&res, lhs);
+  for (size_t i = 0; i < res.len; ++i) {
+    carry = mul_with_carry(vec_get_mut(&res, i), num, carry);
+    vec_push(&res, &carry);
+  }
+
+  if (carry) {
+    vec_push(&res, &carry);
+  }
+
+  return biguint_create(res);
+}
+
+struct biguint biguint_mul(const struct biguint *self, const struct biguint *rhs) {
+  struct biguint res = biguint_zero();
+
+  for (size_t i = 0; i < rhs->nums.len; ++i) {
+    struct vec v = vec_create(sizeof(uint32_t));
+    for (size_t j = 0; j < i; ++j) {
+      vec_push(&v, (int*){0});
+    }
+    const struct biguint product = mul_num(vec_slice_all(&self->nums), *(uint32_t*)vec_get(&rhs->nums, i), v);
+    biguint_add_assign(&res, &product);
+  }
+
+  return res;
+}
+
+bool biguint_eq(const struct biguint *self, const struct biguint *rhs) {
   if (self->nums.len != rhs->nums.len) {
     return false;
   }

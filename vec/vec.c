@@ -18,6 +18,10 @@ struct vec vec_from_array(const void *arr, size_t len, size_t elem_size) {
   return v;
 }
 
+struct vec vec_from_slice(const struct slice s) {
+  return vec_from_array(s.data, s.len, s.elem_size);
+}
+
 void vec_realloc(struct vec *v) {
   if (v->cap == 0) {
     v->cap = 1;
@@ -50,18 +54,36 @@ void vec_extend_from(struct vec *v, struct vec other) {
   vec_extend(v, other.data, other.len);
 }
 
-void *vec_get(struct vec *v, size_t at) {
+void vec_extend_slice(struct vec *v, struct slice other) {
+  vec_extend(v, other.data, other.len);
+}
+
+const void *vec_get(const struct vec *v, size_t at) {
   return v->data + (at * v->elem_size);
 }
 
-struct slice vec_slice(struct vec *v, size_t from, size_t to) {
+void *vec_get_mut(struct vec *v, size_t at) {
+  return v->data + (at * v->elem_size);
+}
+
+struct slice vec_slice(const struct vec *v, size_t from, size_t to) {
   struct slice s = {.data = v->data + from * v->elem_size,
                     .len = to - from,
                     .elem_size = v->elem_size};
   return s;
 }
 
-struct slice vec_slice_all(struct vec *v) { return vec_slice(v, 0, v->len); }
+struct slice_mut vec_slice_mut(struct vec *v, size_t from, size_t to) {
+  struct slice_mut s = {.data = v->data + from * v->elem_size,
+                    .len = to - from,
+                    .elem_size = v->elem_size};
+  return s;
+}
+
+struct slice vec_slice_all(const struct vec *v) { return vec_slice(v, 0, v->len); }
+
+struct slice_mut vec_slice_mut_all(struct vec *v) { return vec_slice_mut(v, 0, v->len); }
+
 
 void *vec_pop(struct vec *v) {
   void *last = malloc(v->elem_size);
@@ -71,14 +93,14 @@ void *vec_pop(struct vec *v) {
 }
 
 void vec_set(struct vec *v, void *value, size_t at) {
-  memcpy(vec_get(v, at), value, v->elem_size);
+  memcpy(vec_get_mut(v, at), value, v->elem_size);
 }
 
 void vec_remove(struct vec *v, size_t at) {
   if (at + 1 == v->len) {
     v->len -= 1;
   } else {
-    memmove(vec_get(v, at), vec_get(v, at + 1),
+    memmove(vec_get_mut(v, at), vec_get(v, at + 1),
             (v->len - at - 1) * v->elem_size);
     v->len -= 1;
   }
