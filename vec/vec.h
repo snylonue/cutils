@@ -17,6 +17,8 @@ struct vec {
 
 struct vec vec_create(size_t elem_size);
 
+struct vec vec_zeroed(size_t elem_size, size_t n);
+
 // struct vec *vec_alloc(size_t elem_size);
 struct vec vec_from_array(const void *arr, size_t len, size_t elem_size);
 
