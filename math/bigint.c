@@ -107,10 +107,10 @@ void biguint_add_assign(struct biguint *self, const struct biguint *rhs) {
     carry = add_nums(vec_slice_mut_all(&self->nums),
                      vec_slice(&rhs->nums, 0, self_len));
     vec_extend(&self->nums, vec_get(&rhs->nums, self_len), rhs_len - self_len);
-    struct biguint left = biguint_from(carry);
-    carry = add_nums(vec_slice_mut(&self->nums, self_len, self->nums.len),
-                     vec_slice_all(&left.nums));
-    biguint_free(&left);
+    carry =
+        add_nums(vec_slice_mut(&self->nums, self_len, self->nums.len),
+                 (struct slice){
+                     .data = &carry, .len = 1, .elem_size = sizeof(uint32_t)});
   }
   if (carry != 0) {
     vec_push(&self->nums, &carry);
@@ -154,10 +154,7 @@ struct biguint biguint_mul(const struct biguint *self,
   struct biguint res = biguint_zero();
 
   for (size_t i = 0; i < rhs->nums.len; ++i) {
-    struct vec v = vec_create(sizeof(uint32_t));
-    for (size_t j = 0; j < i; ++j) {
-      vec_push(&v, (int *){0});
-    }
+    struct vec v = vec_zeroed(sizeof(uint32_t), i);
     struct biguint product = mul_num(vec_slice_all(&self->nums),
                                      *(uint32_t *)vec_get(&rhs->nums, i), v);
     biguint_add_assign(&res, &product);
