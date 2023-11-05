@@ -34,7 +34,7 @@ void vec_realloc(struct vec *v) {
   }
   v->data = realloc(
       v->data,
-      v->cap * v->elem_size); // NOLINT: not deal with realloc failure now
+      v->cap * v->elem_size);
 }
 
 void vec_push(struct vec *v, const void *value) {
@@ -51,7 +51,7 @@ void vec_extend(struct vec *v, const void *arr, size_t len) {
     v->cap = v->len + len;
     v->data = realloc(
         v->data,
-        v->cap * v->elem_size); // NOLINT: not deal with realloc failure now
+        v->cap * v->elem_size);
   }
 
   memcpy(v->data + v->len * v->elem_size, arr, len * v->elem_size);
