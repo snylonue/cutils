@@ -57,18 +57,19 @@ struct biguint biguint_parse(const char *s) {
   size_t power = 4;
   size_t r = digits.len % power;
   size_t i = (r == 0) ? power : r;
-  
-  struct slice head = vec_slice(&digits, 0, i), tail = vec_slice(&digits, i, digits.len);
+
+  struct slice head = vec_slice(&digits, 0, i),
+               tail = vec_slice(&digits, i, digits.len);
 
   struct vec nums = vec_create(sizeof(uint32_t));
   uint32_t first = 0;
   for (size_t j = 0; j < head.len; ++j) {
-    first = first * radix + *(uint32_t*)slice_get(&head, j);
+    first = first * radix + *(uint32_t *)slice_get(&head, j);
   }
   vec_push(&nums, &first);
 
   for (size_t j = 0; j < tail.len; j += power) {
-    if (*(uint32_t*)vec_last(&nums) != 0) {
+    if (*(uint32_t *)vec_last(&nums) != 0) {
       vec_push(&nums, (uint32_t[]){0});
     }
 
@@ -82,13 +83,15 @@ struct biguint biguint_parse(const char *s) {
 
     uint32_t n = 0;
     for (size_t k = 0; k < power; ++k) {
-      n = n * radix + *(uint32_t*)slice_get(&tail, j + k);
+      n = n * radix + *(uint32_t *)slice_get(&tail, j + k);
     }
 
-    add_nums(vec_slice_mut_all(&nums), (struct slice){.data=&n, .len=1, .elem_size=sizeof(uint32_t)});
+    add_nums(
+        vec_slice_mut_all(&nums),
+        (struct slice){.data = &n, .len = 1, .elem_size = sizeof(uint32_t)});
   }
 
-  while (nums.len > 0 && *(uint32_t*)vec_last(&nums) == 0) {
+  while (nums.len > 0 && *(uint32_t *)vec_last(&nums) == 0) {
     vec_pop(&nums);
   }
   return biguint_create(nums);
@@ -114,9 +117,11 @@ void biguint_add_assign(struct biguint *self, const struct biguint *rhs) {
   }
 }
 
-struct biguint biguint_add(const struct biguint *self, const struct biguint *rhs) {
-  struct biguint cloned = (struct biguint){.nums=vec_from_slice(vec_slice_all(&self->nums))};
-  
+struct biguint biguint_add(const struct biguint *self,
+                           const struct biguint *rhs) {
+  struct biguint cloned =
+      (struct biguint){.nums = vec_from_slice(vec_slice_all(&self->nums))};
+
   biguint_add_assign(&cloned, rhs);
   return cloned;
 }
@@ -132,7 +137,7 @@ struct biguint mul_num(const struct slice lhs, uint32_t num, struct vec res) {
   uint32_t carry = 0;
   // vec_extend_slice(&res, lhs);
   for (size_t i = 0; i < lhs.len; ++i) {
-    uint32_t val = *(uint32_t*)slice_get(&lhs, i);
+    uint32_t val = *(uint32_t *)slice_get(&lhs, i);
     carry = mul_with_carry(&val, num, carry);
     vec_push(&res, &val);
   }
@@ -144,15 +149,17 @@ struct biguint mul_num(const struct slice lhs, uint32_t num, struct vec res) {
   return biguint_create(res);
 }
 
-struct biguint biguint_mul(const struct biguint *self, const struct biguint *rhs) {
+struct biguint biguint_mul(const struct biguint *self,
+                           const struct biguint *rhs) {
   struct biguint res = biguint_zero();
 
   for (size_t i = 0; i < rhs->nums.len; ++i) {
     struct vec v = vec_create(sizeof(uint32_t));
     for (size_t j = 0; j < i; ++j) {
-      vec_push(&v, (int*){0});
+      vec_push(&v, (int *){0});
     }
-    struct biguint product = mul_num(vec_slice_all(&self->nums), *(uint32_t*)vec_get(&rhs->nums, i), v);
+    struct biguint product = mul_num(vec_slice_all(&self->nums),
+                                     *(uint32_t *)vec_get(&rhs->nums, i), v);
     biguint_add_assign(&res, &product);
     biguint_free(&product);
   }

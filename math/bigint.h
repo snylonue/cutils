@@ -21,12 +21,14 @@ struct biguint biguint_from(uint32_t n);
 
 struct biguint biguint_parse(const char *s);
 
-struct biguint biguint_add(const struct biguint *self, const struct biguint *rhs);
+struct biguint biguint_add(const struct biguint *self,
+                           const struct biguint *rhs);
 
 // Computes `self + rhs` and stores result in `self`
 void biguint_add_assign(struct biguint *self, const struct biguint *rhs);
 
-struct biguint biguint_mul(const struct biguint *self, const struct biguint *rhs);
+struct biguint biguint_mul(const struct biguint *self,
+                           const struct biguint *rhs);
 
 void biguint_mul_assign(struct biguint *self, const struct biguint *rhs);
 
