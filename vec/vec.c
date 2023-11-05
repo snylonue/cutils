@@ -8,6 +8,10 @@ struct vec vec_create(size_t elem_size) {
   return (struct vec){.data = NULL, .cap = 0, .len = 0, .elem_size = elem_size};
 }
 
+struct vec vec_zeroed(size_t elem_size, size_t n) {
+  return (struct vec){.data = calloc(n, elem_size), .cap = n, .len = n, .elem_size = elem_size};
+}
+
 struct vec vec_from_array(const void *arr, size_t len, size_t elem_size) {
   struct vec v = vec_create(elem_size);
   v.data = malloc(len * elem_size);
