@@ -34,6 +34,8 @@ const void *vec_get(const struct vec *v, size_t at);
 
 void *vec_get_mut(struct vec *v, size_t at);
 
+const void *vec_last(const struct vec *v);
+
 struct slice vec_slice(const struct vec *v, size_t from, size_t to);
 
 struct slice_mut vec_slice_mut(struct vec *v, size_t from, size_t to);
