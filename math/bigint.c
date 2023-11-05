@@ -115,8 +115,7 @@ void biguint_add_assign(struct biguint *self, const struct biguint *rhs) {
 }
 
 struct biguint biguint_add(const struct biguint *self, const struct biguint *rhs) {
-  struct biguint cloned = biguint_zero();
-  vec_extend_from(&cloned.nums, self->nums);
+  struct biguint cloned = (struct biguint){.nums=vec_from_slice(vec_slice_all(&self->nums))};
   
   biguint_add_assign(&cloned, rhs);
   return cloned;
