@@ -94,6 +94,9 @@ struct biguint biguint_parse(const char *s) {
   while (nums.len > 0 && *(uint32_t *)vec_last(&nums) == 0) {
     vec_pop(&nums);
   }
+  while (nums.len > 0 && *(uint32_t *)vec_last(&nums) == 0) {
+    vec_pop(&nums);
+  }
   return biguint_create(nums);
 }
 
@@ -124,6 +127,42 @@ struct biguint biguint_add(const struct biguint *self,
 
   biguint_add_assign(&cloned, rhs);
   return cloned;
+}
+
+uint32_t sub_with_borrow(uint32_t *l, uint32_t r, uint32_t borrow) {
+  int64_t sub = (int64_t)*l - (int64_t)borrow - (int64_t)r;
+  *l = (uint32_t)sub;
+  return sub < 0;
+}
+
+uint32_t sub_nums(struct slice_mut lhs, const struct slice rhs) {
+  uint32_t borrow = 0;
+  for (size_t i = 0; i < rhs.len; ++i) {
+    borrow = sub_with_borrow(slice_get_mut(&lhs, i),
+                             *(uint32_t *)slice_get(&rhs, i), borrow);
+  }
+  for (size_t i = rhs.len; i < lhs.len; ++i) {
+    borrow = sub_with_borrow(slice_get_mut(&lhs, i), 0, borrow);
+  }
+
+  return borrow;
+}
+
+// returns false if underflow
+bool biguint_sub_assign(struct biguint *self, const struct biguint *rhs) {
+  size_t self_len = self->nums.len, rhs_len = rhs->nums.len;
+  if (self_len < rhs_len) {
+    return false; // underflow
+  }
+
+  uint32_t borrow =
+      sub_nums(vec_slice_mut_all(&self->nums), vec_slice_all(&rhs->nums));
+
+  while (self->nums.len > 0 && *(uint32_t *)vec_last(&self->nums) == 0) {
+    vec_pop(&self->nums);
+  }
+
+  return borrow == 0;
 }
 
 uint32_t mul_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {

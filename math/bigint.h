@@ -27,6 +27,8 @@ struct biguint biguint_add(const struct biguint *self,
 // Computes `self + rhs` and stores result in `self`
 void biguint_add_assign(struct biguint *self, const struct biguint *rhs);
 
+bool biguint_sub_assign(struct biguint *self, const struct biguint *rhs);
+
 struct biguint biguint_mul(const struct biguint *self,
                            const struct biguint *rhs);
 
