@@ -16,6 +16,10 @@ struct biguint biguint_from(uint32_t n) {
   return biguint_create(nums);
 }
 
+struct biguint biguint_clone(const struct biguint *other) {
+  return (struct biguint){.nums = vec_from_slice(vec_slice_all(&other->nums))};
+}
+
 struct biguint biguint_zero() { return biguint_from(0); }
 
 struct biguint biguint_one() { return biguint_from(1); }
@@ -122,9 +126,7 @@ void biguint_add_assign(struct biguint *self, const struct biguint *rhs) {
 
 struct biguint biguint_add(const struct biguint *self,
                            const struct biguint *rhs) {
-  struct biguint cloned =
-      (struct biguint){.nums = vec_from_slice(vec_slice_all(&self->nums))};
-
+  struct biguint cloned = biguint_clone(self);
   biguint_add_assign(&cloned, rhs);
   return cloned;
 }
@@ -163,6 +165,13 @@ bool biguint_sub_assign(struct biguint *self, const struct biguint *rhs) {
   }
 
   return borrow == 0;
+}
+
+struct biguint biguint_sub(const struct biguint *self,
+                           const struct biguint *rhs) {
+  struct biguint cloned = biguint_clone(self);
+  biguint_sub_assign(&cloned, rhs);
+  return cloned;
 }
 
 uint32_t mul_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
