@@ -36,6 +36,8 @@ struct biguint biguint_mul(const struct biguint *self,
 
 void biguint_mul_assign(struct biguint *self, const struct biguint *rhs);
 
+struct biguint biguint_div(struct biguint *self, const struct biguint *rhs);
+
 bool biguint_eq(const struct biguint *self, const struct biguint *rhs);
 
 void biguint_free(struct biguint *n);

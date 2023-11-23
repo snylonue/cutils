@@ -212,6 +212,12 @@ struct biguint biguint_mul(const struct biguint *self,
   return res;
 }
 
+struct biguint biguint_div(struct biguint *self, const struct biguint *rhs) {
+  if (self->nums.len < rhs->nums.len) {
+    return biguint_zero();
+  }
+}
+
 bool biguint_eq(const struct biguint *self, const struct biguint *rhs) {
   if (self->nums.len != rhs->nums.len) {
     return false;
