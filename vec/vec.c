@@ -1,6 +1,7 @@
 #include "vec.h"
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -42,7 +43,7 @@ void vec_push(struct vec *v, const void *value) {
     vec_realloc(v);
   }
 
-  memcpy(v->data + v->len * v->elem_size, value, v->elem_size);
+  memcpy((uint8_t *)v->data + v->len * v->elem_size, value, v->elem_size);
   v->len += 1;
 }
 
@@ -54,7 +55,7 @@ void vec_extend(struct vec *v, const void *arr, size_t len) {
         v->cap * v->elem_size);
   }
 
-  memcpy(v->data + v->len * v->elem_size, arr, len * v->elem_size);
+  memcpy((uint8_t *)v->data + v->len * v->elem_size, arr, len * v->elem_size);
   v->len += len;
 }
 
@@ -67,25 +68,25 @@ void vec_extend_slice(struct vec *v, struct slice other) {
 }
 
 const void *vec_get(const struct vec *v, size_t at) {
-  return v->data + (at * v->elem_size);
+  return (uint8_t *)v->data + (at * v->elem_size);
 }
 
 void *vec_get_mut(struct vec *v, size_t at) {
-  return v->data + (at * v->elem_size);
+  return (uint8_t *)v->data + (at * v->elem_size);
 }
 
 const void *vec_last(const struct vec *v) { return vec_get(v, v->len - 1); }
 
 // return a slice of [from, to)
 struct slice vec_slice(const struct vec *v, size_t from, size_t to) {
-  struct slice s = {.data = v->data + from * v->elem_size,
+  struct slice s = {.data = (uint8_t *)v->data + from * v->elem_size,
                     .len = to - from,
                     .elem_size = v->elem_size};
   return s;
 }
 
 struct slice_mut vec_slice_mut(struct vec *v, size_t from, size_t to) {
-  struct slice_mut s = {.data = v->data + from * v->elem_size,
+  struct slice_mut s = {.data = (uint8_t *)v->data + from * v->elem_size,
                         .len = to - from,
                         .elem_size = v->elem_size};
   return s;
@@ -122,7 +123,7 @@ void vec_remove(struct vec *v, size_t at) {
 
 struct iter vec_iter(struct vec *v) {
   return (struct iter){.ptr = v->data,
-                       .end = v->data + v->len * v->elem_size,
+                       .end = (uint8_t *)v->data + v->len * v->elem_size,
                        .elem_size = v->elem_size};
 }
 

@@ -20,9 +20,9 @@ struct biguint biguint_clone(const struct biguint *other) {
   return (struct biguint){.nums = vec_from_slice(vec_slice_all(&other->nums))};
 }
 
-struct biguint biguint_zero() { return biguint_from(0); }
+struct biguint biguint_zero(void) { return biguint_from(0); }
 
-struct biguint biguint_one() { return biguint_from(1); }
+struct biguint biguint_one(void) { return biguint_from(1); }
 
 uint32_t add_with_carry(uint32_t *l, uint32_t r, uint32_t carry) {
   uint64_t sum = (uint64_t)*l + (uint64_t)r + (uint64_t)carry;
