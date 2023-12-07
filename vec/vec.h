@@ -2,7 +2,6 @@
 #define CUTILS_VEC_VEC_H
 
 #include <stddef.h>
-#include <stdlib.h>
 
 #include "iter.h"
 #include "slice.h"

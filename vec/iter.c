@@ -1,8 +1,9 @@
 #include "iter.h"
+#include <stdint.h>
 
 const void *iter_next(struct iter *it) {
   const void *cur = it->ptr;
-  it->ptr += it->elem_size;
+  it->ptr = (uint8_t *)it->ptr + it->elem_size;
 
   return cur;
 }

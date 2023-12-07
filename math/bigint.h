@@ -13,9 +13,9 @@ struct biguint {
 
 struct biguint biguint_create(struct vec nums);
 
-struct biguint biguint_zero();
+struct biguint biguint_zero(void);
 
-struct biguint biguint_one();
+struct biguint biguint_one(void);
 
 struct biguint biguint_from(uint32_t n);
 
