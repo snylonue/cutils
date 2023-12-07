@@ -11,6 +11,7 @@ struct string {
 struct string string_new(void);
 void string_reserve(struct string *s, size_t size);
 struct string string_from_c_str(const char *str);
+void string_push(struct string *s, char ch);
 struct string_view string_into_view(const struct string *s);
 struct string_view string_slice(const struct string *s, size_t l, size_t r);
 struct split string_split(const struct string *s, char delim);

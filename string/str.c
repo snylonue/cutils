@@ -27,6 +27,15 @@ struct string string_from_c_str(const char *str) {
     return s;
 }
 
+void string_push(struct string *s, char ch) {
+    if (s->len == s->cap) {
+        string_reserve(s, (s->cap) ? s->cap << 1 : 1);
+    }
+
+    s->data[s->len] = ch;
+    s->len += 1;
+}
+
 struct string_view string_into_view(const struct string *s) {
     return (struct string_view){
         .data = s->data,
