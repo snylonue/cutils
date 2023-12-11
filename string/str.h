@@ -1,3 +1,6 @@
+#ifndef CUTILS_STR_H
+#define CUTILS_STR_H
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -32,3 +35,5 @@ struct split {
 
 struct string_view split_next(struct split *sp);
 bool split_is_end(struct split *sp);
+
+#endif
