@@ -1,5 +1,5 @@
-#ifndef CUTILS_STR_H
-#define CUTILS_STR_H
+#ifndef CUTILS_STRING_STR_H
+#define CUTILS_STRING_STR_H
 
 #include <stdbool.h>
 #include <stddef.h>
